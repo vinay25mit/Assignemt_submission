@@ -1,23 +1,21 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
-import ProtectedRoute from "./auth/ProtectedRoute";
 import { AuthProvider } from "./auth/AuthContext";
+import AuthGuard from "./auth/AuthGuard";
 
 const App = () => (
   <AuthProvider>
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <AuthGuard>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+
+          {/* Catch-all route */}
+          <Route path="*" element={<Navigate to="/dashboard" />} />
+        </Routes>
+      </AuthGuard>
     </BrowserRouter>
   </AuthProvider>
 );
